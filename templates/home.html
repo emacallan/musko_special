@@ -1,0 +1,238 @@
+<html>
+  <head>
+    <script type="module"
+      src="https://cdn.jsdelivr.net/gh/starfederation/datastar@1.0.0-RC.5/bundles/datastar.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        background-color: #000;
+        color: #33ff33;
+        font-family: "Courier New", Courier, monospace;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+      }
+
+      .terminal {
+        background-color: #0a0a0a;
+        border: 4px solid #33ff33;
+        padding: 40px;
+        max-width: 600px;
+        width: 100%;
+        box-shadow: 
+          0 0 20px #33ff33,
+          inset 0 0 50px rgba(51, 255, 51, 0.1);
+      }
+
+      .header {
+        text-align: center;
+        border-bottom: 2px solid #33ff33;
+        padding-bottom: 20px;
+        margin-bottom: 30px;
+      }
+
+      .classification {
+        background-color: #ff0000;
+        color: #fff;
+        padding: 5px 15px;
+        font-weight: bold;
+        letter-spacing: 3px;
+        display: inline-block;
+        margin-bottom: 15px;
+        animation: blink 1s infinite;
+      }
+
+      @keyframes blink {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.7; }
+      }
+
+      .title {
+        font-size: 24px;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        margin: 15px 0;
+      }
+
+      .subtitle {
+        font-size: 12px;
+        letter-spacing: 2px;
+        color: #22aa22;
+      }
+
+      .system-info {
+        font-size: 11px;
+        color: #22aa22;
+        margin-top: 10px;
+        letter-spacing: 1px;
+      }
+
+      .content {
+        text-align: center;
+      }
+
+      .prompt {
+        font-size: 14px;
+        margin-bottom: 20px;
+        letter-spacing: 1px;
+      }
+
+      .code-input-container {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin: 30px 0;
+      }
+
+      .code-digit {
+        width: 60px;
+        height: 70px;
+        background-color: #000;
+        border: 2px solid #33ff33;
+        color: #33ff33;
+        font-family: "Courier New", Courier, monospace;
+        font-size: 36px;
+        text-align: center;
+        outline: none;
+      }
+
+      .code-digit:focus {
+        box-shadow: 0 0 15px #33ff33;
+        background-color: #0a1a0a;
+      }
+
+      .code-digit::placeholder {
+        color: #115511;
+      }
+
+      .submit-btn {
+        background-color: #1a0000;
+        color: #ff3333;
+        border: 2px solid #ff3333;
+        padding: 15px 40px;
+        font-family: "Courier New", Courier, monospace;
+        font-size: 16px;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        cursor: pointer;
+        margin-top: 20px;
+        transition: all 0.3s;
+      }
+
+      .submit-btn:hover {
+        background-color: #ff3333;
+        color: #000;
+        box-shadow: 0 0 20px #ff3333;
+      }
+
+      .warning {
+        margin-top: 30px;
+        padding: 15px;
+        border: 1px dashed #ffaa00;
+        color: #ffaa00;
+        font-size: 11px;
+        letter-spacing: 1px;
+      }
+
+      .footer {
+        margin-top: 30px;
+        padding-top: 20px;
+        border-top: 1px solid #33ff33;
+        font-size: 10px;
+        color: #22aa22;
+        text-align: center;
+        letter-spacing: 1px;
+      }
+
+      .scanline {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        background: repeating-linear-gradient(
+          0deg,
+          rgba(0, 0, 0, 0.1),
+          rgba(0, 0, 0, 0.1) 1px,
+          transparent 1px,
+          transparent 2px
+        );
+      }
+
+      .status {
+        display: flex;
+        justify-content: space-between;
+        font-size: 10px;
+        margin-top: 15px;
+        color: #22aa22;
+      }
+
+      .status-indicator {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        background-color: #33ff33;
+        border-radius: 50%;
+        margin-right: 5px;
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.3; }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="scanline"></div>
+    <div class="terminal">
+      <div class="header">
+        <div class="classification">KVALIFICERAT HEMLIG</div>
+        <div class="title">FÖRSVARETS RADIOANSTALT</div>
+        <div class="subtitle">STRATEGISKT LEDNINGSSYSTEM</div>
+        <div class="system-info">STRIL 60 TERMINAL v2.71 // NOD MUSKÖ</div>
+      </div>
+
+      <div class="content">
+        <div class="prompt">&gt;&gt; ANGE 4-SIFFRIG BEHÖRIGHETSKOD &lt;&lt;</div>
+        
+        <form data-signals="{launchCode: ''}">
+          <div class="code-input-container">
+            <input type="text" class="code-digit" maxlength="1" placeholder="_" autocomplete="off">
+            <input type="text" class="code-digit" maxlength="1" placeholder="_" autocomplete="off">
+            <input type="text" class="code-digit" maxlength="1" placeholder="_" autocomplete="off">
+            <input type="text" class="code-digit" maxlength="1" placeholder="_" autocomplete="off">
+          </div>
+          
+          <button type="submit" class="submit-btn">VERIFIERA</button>
+        </form>
+
+        <div class="warning">
+          VARNING: OBEHÖRIG ÅTKOMST ÄR ETT BROTT<br>
+          ALL AKTIVITET ÖVERVAKAS OCH REGISTRERAS<br>
+          ÖVERTRÄDELSE BESTRAFFAS ENLIGT BrB 4 KAP 9C §
+        </div>
+      </div>
+
+      <div class="status">
+        <span><span class="status-indicator"></span>SYSTEM AKTIVT</span>
+        <span>SKÄRPT BEREDSKAP</span>
+        <span>KRYPTERING: AKTIV</span>
+      </div>
+
+      <div class="footer">
+        FÖRSVARSDEPARTEMENTET // ENDAST BEHÖRIG PERSONAL<br>
+        ÖVERBEFÄLHAVAREN - FÖRSVARETS HÖGKVARTER - 1985
+      </div>
+    </div>
+  </body>
+</html>
