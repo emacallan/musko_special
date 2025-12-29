@@ -1,219 +1,311 @@
 <html>
-  <head>
-    <script type="module"
-      src="https://cdn.jsdelivr.net/gh/starfederation/datastar@1.0.0-RC.5/bundles/datastar.js"></script>
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
+
+<head>
+  <script type="module" src="https://cdn.jsdelivr.net/gh/starfederation/datastar@1.0.0-RC.5/bundles/datastar.js"></script>
+  <script type="module" src="datastar-inspector.js"></script>
+  <!-- <script type="module" src="/static/datastar-1-0-0-851ca2997c69df67.js"></script> -->
+  <!-- <script type="module" src="/static/datastar-inspector.js"></script> -->
+  <datastar-inspector></datastar-inspector>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: #000;
+      color: #33ff33;
+      font-family: "Courier New", Courier, monospace;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .terminal {
+      background-color: #0a0a0a;
+      border: 4px solid #33ff33;
+      padding: 40px;
+      max-width: 600px;
+      width: 100%;
+      box-shadow:
+        0 0 20px #33ff33,
+        inset 0 0 50px rgba(51, 255, 51, 0.1);
+    }
+
+    .header {
+      text-align: center;
+      border-bottom: 2px solid #33ff33;
+      padding-bottom: 20px;
+      margin-bottom: 30px;
+    }
+
+    .classification {
+      background-color: #ff0000;
+      color: #fff;
+      padding: 5px 15px;
+      font-weight: bold;
+      letter-spacing: 3px;
+      display: inline-block;
+      margin-bottom: 15px;
+    }
+
+    < !-- animation: blink 1s infinite;
+
+    -->@keyframes blink {
+
+      0%,
+      100% {
+        opacity: 1;
       }
 
-      body {
-        background-color: #000;
-        color: #33ff33;
-        font-family: "Courier New", Courier, monospace;
-        min-height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 20px;
+      50% {
+        opacity: 0.7;
+      }
+    }
+
+    .title {
+      font-size: 24px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      margin: 15px 0;
+    }
+
+    .subtitle {
+      font-size: 12px;
+      letter-spacing: 2px;
+      color: #22aa22;
+    }
+
+    .system-info {
+      font-size: 11px;
+      color: #22aa22;
+      margin-top: 10px;
+      letter-spacing: 1px;
+    }
+
+    .content {
+      text-align: center;
+      min-height: 50vh;
+      view-transition-name: content;
+    }
+
+    ::view-transition-old(content) {
+      animation: fade-out 0.3s ease-out forwards;
+    }
+
+    ::view-transition-new(content) {
+      animation: none;
+    }
+
+    @keyframes fade-out {
+      from {
+        opacity: 1;
       }
 
-      .terminal {
-        background-color: #0a0a0a;
-        border: 4px solid #33ff33;
-        padding: 40px;
-        max-width: 600px;
-        width: 100%;
-        box-shadow: 
-          0 0 20px #33ff33,
-          inset 0 0 50px rgba(51, 255, 51, 0.1);
+      to {
+        opacity: 0;
       }
+    }
 
-      .header {
-        text-align: center;
-        border-bottom: 2px solid #33ff33;
-        padding-bottom: 20px;
-        margin-bottom: 30px;
+    .tw-word {
+      opacity: 0;
+      animation: word-appear 0.05s forwards;
+    }
+
+    @keyframes word-appear {
+      to {
+        opacity: 1;
       }
+    }
 
-      .classification {
-        background-color: #ff0000;
-        color: #fff;
-        padding: 5px 15px;
-        font-weight: bold;
-        letter-spacing: 3px;
-        display: inline-block;
-        margin-bottom: 15px;
-        animation: blink 1s infinite;
-      }
+    .terminal-output {
+      text-align: left;
+      line-height: 1.6;
+    }
 
-      @keyframes blink {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0.7; }
-      }
+    .terminal-output p {
+      margin-bottom: 1em;
+    }
 
-      .title {
-        font-size: 24px;
-        letter-spacing: 4px;
-        text-transform: uppercase;
-        margin: 15px 0;
-      }
+    .terminal-output p::before {
+      content: "> ";
+      color: #22aa22;
+    }
 
-      .subtitle {
-        font-size: 12px;
-        letter-spacing: 2px;
-        color: #22aa22;
-      }
+    .prompt {
+      font-size: 14px;
+      margin-bottom: 20px;
+      letter-spacing: 1px;
+    }
 
-      .system-info {
-        font-size: 11px;
-        color: #22aa22;
-        margin-top: 10px;
-        letter-spacing: 1px;
-      }
+    .terminal-prompt {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 30px 0;
+      font-size: 18px;
+    }
 
-      .content {
-        text-align: center;
-      }
+    .prompt-label {
+      color: #33ff33;
+      margin-bottom: 10px;
+    }
 
-      .prompt {
-        font-size: 14px;
-        margin-bottom: 20px;
-        letter-spacing: 1px;
-      }
+    .prompt-input-line {
+      display: flex;
+      align-items: center;
+    }
 
-      .code-input-container {
-        display: flex;
-        justify-content: center;
-        gap: 10px;
-        margin: 30px 0;
-      }
+    .prompt-symbol {
+      color: #33ff33;
+    }
 
-      .code-digit {
-        width: 60px;
-        height: 70px;
-        background-color: #000;
-        border: 2px solid #33ff33;
-        color: #33ff33;
-        font-family: "Courier New", Courier, monospace;
-        font-size: 36px;
-        text-align: center;
-        outline: none;
-      }
+    .code-input {
+      background-color: transparent;
+      border: none;
+      border-bottom: 2px solid #33ff33;
+      color: #33ff33;
+      font-family: "Courier New", Courier, monospace;
+      font-size: 24px;
+      width: 240px;
+      text-align: left;
+      letter-spacing: 8px;
+      outline: none;
+      caret-color: #33ff33;
+    }
 
-      .code-digit:focus {
-        box-shadow: 0 0 15px #33ff33;
-        background-color: #0a1a0a;
-      }
+    .code-input:focus {
+      background-color: rgba(51, 255, 51, 0.05);
+    }
 
-      .code-digit::placeholder {
-        color: #115511;
-      }
+    .code-input::placeholder {
+      color: #115511;
+      letter-spacing: 8px;
+    }
 
-      .submit-btn {
-        background-color: #1a0000;
-        color: #ff3333;
-        border: 2px solid #ff3333;
-        padding: 15px 40px;
-        font-family: "Courier New", Courier, monospace;
-        font-size: 16px;
-        letter-spacing: 3px;
-        text-transform: uppercase;
-        cursor: pointer;
-        margin-top: 20px;
-        transition: all 0.3s;
-      }
+    .submit-btn {
+      background-color: #1a0000;
+      color: #ff3333;
+      border: 2px solid #ff3333;
+      padding: 15px 40px;
+      font-family: "Courier New", Courier, monospace;
+      font-size: 16px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: all 0.3s;
+    }
 
-      .submit-btn:hover {
-        background-color: #ff3333;
-        color: #000;
-        box-shadow: 0 0 20px #ff3333;
-      }
+    .submit-btn:hover {
+      background-color: #ff3333;
+      color: #000;
+      box-shadow: 0 0 20px #ff3333;
+    }
 
-      .warning {
-        margin-top: 30px;
-        padding: 15px;
-        border: 1px dashed #ffaa00;
-        color: #ffaa00;
-        font-size: 11px;
-        letter-spacing: 1px;
-      }
+    .warning {
+      margin-top: 30px;
+      padding: 15px;
+      border: 1px dashed #ffaa00;
+      color: #ffaa00;
+      font-size: 11px;
+      letter-spacing: 1px;
+    }
 
-      .footer {
-        margin-top: 30px;
-        padding-top: 20px;
-        border-top: 1px solid #33ff33;
-        font-size: 10px;
-        color: #22aa22;
-        text-align: center;
-        letter-spacing: 1px;
-      }
+    .footer {
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid #33ff33;
+      font-size: 10px;
+      color: #22aa22;
+      text-align: center;
+      letter-spacing: 1px;
+    }
 
-      .scanline {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        pointer-events: none;
-        background: repeating-linear-gradient(
-          0deg,
+    .scanline {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      background: repeating-linear-gradient(0deg,
           rgba(0, 0, 0, 0.1),
           rgba(0, 0, 0, 0.1) 1px,
           transparent 1px,
-          transparent 2px
-        );
+          transparent 2px);
+    }
+
+    .status {
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      margin-top: 15px;
+      color: #22aa22;
+    }
+
+    .status-indicator-active {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      background-color: #33ff33;
+      border-radius: 50%;
+      margin-right: 5px;
+      animation: pulse 2s infinite;
+    }
+
+    .inactive {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      background-color: #ff3333;
+      border-radius: 50%;
+      margin-right: 5px;
+      animation: pulse 2s infinite;
+    }
+
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1;
       }
 
-      .status {
-        display: flex;
-        justify-content: space-between;
-        font-size: 10px;
-        margin-top: 15px;
-        color: #22aa22;
+      50% {
+        opacity: 0.3;
       }
+    }
+  </style>
+</head>
 
-      .status-indicator {
-        display: inline-block;
-        width: 8px;
-        height: 8px;
-        background-color: #33ff33;
-        border-radius: 50%;
-        margin-right: 5px;
-        animation: pulse 2s infinite;
-      }
+<body>
+  <div class="scanline"></div>
+  <div class="terminal">
+    <div class="header">
+      <div class="classification">KVALIFICERAT HEMLIG</div>
+      <div class="title">FÖRSVARETS RADIOANSTALT</div>
+      <div class="subtitle">STRATEGISKT LEDNINGSSYSTEM</div>
+      <div class="system-info">STRIL 60 TERMINAL v2.71 // NOD MUSKÖ</div>
+    </div>
 
-      @keyframes pulse {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0.3; }
-      }
-    </style>
-  </head>
-
-  <body>
-    <div class="scanline"></div>
-    <div class="terminal">
-      <div class="header">
-        <div class="classification">KVALIFICERAT HEMLIG</div>
-        <div class="title">FÖRSVARETS RADIOANSTALT</div>
-        <div class="subtitle">STRATEGISKT LEDNINGSSYSTEM</div>
-        <div class="system-info">STRIL 60 TERMINAL v2.71 // NOD MUSKÖ</div>
-      </div>
-
-      <div class="content">
+    <div id="content" class="content">
+      <div id="content-inner">
         <div class="prompt">&gt;&gt; ANGE 4-SIFFRIG BEHÖRIGHETSKOD &lt;&lt;</div>
-        
-        <form data-signals="{launchCode: ''}">
-          <div class="code-input-container">
-            <input type="text" class="code-digit" maxlength="1" placeholder="_" autocomplete="off">
-            <input type="text" class="code-digit" maxlength="1" placeholder="_" autocomplete="off">
-            <input type="text" class="code-digit" maxlength="1" placeholder="_" autocomplete="off">
-            <input type="text" class="code-digit" maxlength="1" placeholder="_" autocomplete="off">
+
+        <form data-signals="{launchCode: '', status: 'inactive'}">
+          <div class="terminal-prompt">
+            <span class="prompt-label">BEHÖRIGHETSKOD:</span>
+            <div class="prompt-input-line">
+              <span class="prompt-symbol">&gt;</span><input type="text" class="code-input" maxlength="4"
+                placeholder="____" autocomplete="off" data-bind="launchCode">
+            </div>
           </div>
-          
-          <button type="submit" class="submit-btn">VERIFIERA</button>
+
+          <button type="button" class="submit-btn" data-on:click=@post("/launch-code")>VERIFIERA</button>
         </form>
 
         <div class="warning">
@@ -222,17 +314,21 @@
           ÖVERTRÄDELSE BESTRAFFAS ENLIGT BrB 4 KAP 9C §
         </div>
       </div>
-
-      <div class="status">
-        <span><span class="status-indicator"></span>SYSTEM AKTIVT</span>
-        <span>SKÄRPT BEREDSKAP</span>
-        <span>KRYPTERING: AKTIV</span>
-      </div>
-
-      <div class="footer">
-        FÖRSVARSDEPARTEMENTET // ENDAST BEHÖRIG PERSONAL<br>
-        ÖVERBEFÄLHAVAREN - FÖRSVARETS HÖGKVARTER - 1985
-      </div>
     </div>
-  </body>
+
+    <div class="status">
+      <span>
+        <span id="status-indicator" data-class:inactive="$status == 'inactive' ">
+        </span>SYSTEM <span data-text="$status == 'active' ? 'AKTIVT' : 'INAKTIVT'"></span></span>
+      <span>SKÄRPT BEREDSKAP</span>
+      <span>KRYPTERING: AKTIV</span>
+    </div>
+
+    <div class="footer">
+      FÖRSVARSDEPARTEMENTET // ENDAST BEHÖRIG PERSONAL<br>
+      ÖVERBEFÄLHAVAREN - FÖRSVARETS HÖGKVARTER - 1985
+    </div>
+  </div>
+</body>
+
 </html>
