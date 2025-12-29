@@ -64,8 +64,14 @@ class Home(TemplateBase, template=Path("home.html")):
 
 
 class CorrectCode(TemplateBase, template=Path("correct_code.html")):
-    def render(self, request: Request, **kwargs) -> str:
+    def renderr(self, request: Request, **kwargs) -> str:
         text = request.state._state["env"].render_str(
             typewriter_words(self._template.read_text())
         )
-        return f'<div class="terminal-output">{text}</div>'
+        return f'<div id="correct-code" class="terminal-output">{text}</div><div id="coordinates"></div>'
+
+class CoordinatesRequest(TemplateBase, template=Path("coordinates_request.html")):
+    pass
+
+class WhySoSlow(CorrectCode, template=Path("whysoslow.html")):
+    pass

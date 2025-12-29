@@ -1,10 +1,10 @@
 <html>
 
 <head>
-  <script type="module" src="https://cdn.jsdelivr.net/gh/starfederation/datastar@1.0.0-RC.7/bundles/datastar.js"></script>
-  <script type="module" src="datastar-inspector.js"></script>
+  <script type="module"
+    src="https://cdn.jsdelivr.net/gh/starfederation/datastar@1.0.0-RC.7/bundles/datastar.js"></script>
   <!-- <script type="module" src="/static/datastar-1-0-0-851ca2997c69df67.js"></script> -->
-  <!-- <script type="module" src="/static/datastar-inspector.js"></script> -->
+  <script type="module" src="/static/datastar-inspector.js"></script>
   <datastar-inspector></datastar-inspector>
   <style>
     * {
@@ -89,7 +89,14 @@
     .content {
       text-align: center;
       min-height: 50vh;
+      margin-bottom: 24px;
+      display: flex;
+      flex-direction: column;
       view-transition-name: content;
+    }
+
+    #content-dialog {
+      margin-top: auto;
     }
 
     ::view-transition-old(content) {
@@ -110,14 +117,30 @@
       }
     }
 
-    .tw-word {
-      opacity: 0;
-      animation: word-appear 0.05s forwards;
+    #content-dialog p {
+      display: inline-block;
+      overflow: hidden;
+      white-space: nowrap;
+      border-right: 2px solid #33ff33;
+      max-width: 0;
+      animation: 
+        typewriter 2s steps(50, end) forwards,
+        blink-caret 0.75s step-end 4;
     }
 
-    @keyframes word-appear {
+    @keyframes typewriter {
       to {
-        opacity: 1;
+        max-width: 100%;
+        border-color: transparent;
+      }
+    }
+
+    @keyframes blink-caret {
+      from, to {
+        border-color: transparent;
+      }
+      50% {
+        border-color: #33ff33;
       }
     }
 
@@ -239,7 +262,7 @@
           transparent 2px);
     }
 
-    .status {
+    #status-indicator-container {
       display: flex;
       justify-content: space-between;
       font-size: 10px;
@@ -293,7 +316,7 @@
     </div>
 
     <div id="content" class="content">
-      <div id="content-inner">
+      <div id="content-input">
         <div class="prompt">&gt;&gt; ANGE 4-SIFFRIG BEHÖRIGHETSKOD &lt;&lt;</div>
 
         <form data-signals="{launchCode: '', status: 'inactive'}">
@@ -314,9 +337,15 @@
           ÖVERTRÄDELSE BESTRAFFAS ENLIGT BrB 4 KAP 9C §
         </div>
       </div>
+      <div 
+        id="content-dialog" 
+        class="terminal-output typewriter" 
+        data-init="@get('/dialog', {openWhenHidden: true})"
+      >
+      </div>
     </div>
 
-    <div class="status">
+    <div id="status-indicator-container" class="status">
       <span>
         <span id="status-indicator" data-class:inactive="$status == 'inactive' ">
         </span>SYSTEM <span data-text="$status == 'active' ? 'AKTIVT' : 'INAKTIVT'"></span></span>
