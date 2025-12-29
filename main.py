@@ -108,7 +108,6 @@ async def successful(request: Request):
         correct_code,
         selector="#content-input",
         mode=ElementPatchMode.INNER,
-        use_view_transition=True,
     )
 
     coordinates_request = CoordinatesRequest().render(request)
@@ -118,7 +117,6 @@ async def successful(request: Request):
         coordinates_request,
         selector="#content-input",
         mode=ElementPatchMode.APPEND,
-        use_view_transition=True,
     )
 
 async def dia(messages: asyncio.Queue, shutdown_event: asyncio.Event, client_id: str):
