@@ -1,7 +1,8 @@
-<div class="terminal-prompt">
+<div data-signals="{coordinates: ''}" class="terminal-prompt">
   <span class="prompt-label">ANGE NEDSLAGS-KOORDINATER:</span>
   <div class="prompt-input-line">
-    <span class="prompt-symbol">&gt;</span><input type="text" class="code-input" maxlength="4"
-      placeholder="____" autocomplete="off" data-bind="launchCode">
+    <span class="prompt-symbol">&gt;</span>
+    <input type="text" class="code-input" maxlength="4" placeholder="____" autocomplete="off" data-bind="coordinates">
   </div>
+  <button type="button" class="submit-btn" data-on:click=@post("/coordinates")>VERIFIERA</button>
 </div>

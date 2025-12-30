@@ -315,7 +315,11 @@
       <div class="system-info">STRIL 60 TERMINAL v2.71 // NOD MUSKÖ</div>
     </div>
 
-    <div id="content" class="content">
+    <div
+      id="content" 
+      class="content"
+      data-init="@get('/dialog', {openWhenHidden: true})"
+    >
       <div id="content-input">
         <div class="prompt">&gt;&gt; ANGE 4-SIFFRIG BEHÖRIGHETSKOD &lt;&lt;</div>
 
@@ -340,7 +344,6 @@
       <div 
         id="content-dialog" 
         class="terminal-output typewriter" 
-        data-init="@get('/dialog', {openWhenHidden: true})"
       >
       </div>
     </div>
