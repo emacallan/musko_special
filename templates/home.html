@@ -1,6 +1,7 @@
 <html>
 
 <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script type="module"
     src="https://cdn.jsdelivr.net/gh/starfederation/datastar@1.0.0-RC.7/bundles/datastar.js"></script>
   <!-- <script type="module" src="/static/datastar-1-0-0-851ca2997c69df67.js"></script> -->
@@ -300,6 +301,64 @@
 
       50% {
         opacity: 0.3;
+      }
+    }
+
+    /* Mobile-specific styles */
+    @media screen and (max-width: 768px) {
+      body {
+        padding: 8px;
+      }
+
+      .terminal {
+        padding: 15px;
+        max-width: 100%;
+        border-width: 2px;
+      }
+
+      .header {
+        padding-bottom: 12px;
+        margin-bottom: 15px;
+      }
+
+      .classification {
+        padding: 3px 10px;
+        letter-spacing: 2px;
+        font-size: 11px;
+      }
+
+      .title {
+        font-size: 16px;
+        letter-spacing: 2px;
+      }
+
+      .terminal-output,
+      #content-dialog p {
+        font-size: 15px;
+        line-height: 1.8;
+      }
+
+      .prompt {
+        font-size: 16px;
+      }
+
+      .terminal-prompt {
+        font-size: 20px;
+      }
+
+      .warning {
+        font-size: 10px;
+        padding: 10px;
+      }
+
+      .footer {
+        font-size: 9px;
+      }
+
+      #status-indicator-container {
+        font-size: 9px;
+        flex-wrap: wrap;
+        gap: 5px;
       }
     }
   </style>
