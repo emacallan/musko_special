@@ -1,0 +1,16 @@
+<div id="video-container" style="display: flex; justify-content: center; align-items: center; width: 100%;">
+  <video 
+    id="mission-video"
+    autoplay
+    muted
+    playsinline
+    webkit-playsinline
+    preload="auto"
+    controls
+    style="max-width: 100%; max-height: 60vh;"
+    data-on:loadeddata="this.play()"
+    data-on:ended="@get('/after-video')"
+    src="/media/Missile_Homing_In_On_U_Boat.mp4"
+  >
+  </video>
+</div>

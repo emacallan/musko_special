@@ -3,6 +3,7 @@ from typing import ClassVar, Unpack
 from fastapi import Request
 from pydantic import BaseModel, ConfigDict
 from minijinja import Markup, escape
+import time
 import logging
 import re
 
@@ -64,14 +65,31 @@ class Home(TemplateBase, template=Path("home.html")):
 
 
 class CorrectCode(TemplateBase, template=Path("correct_code.html")):
-    def renderr(self, request: Request, **kwargs) -> str:
-        text = request.state._state["env"].render_str(
-            typewriter_words(self._template.read_text())
-        )
-        return f'<div id="correct-code" class="terminal-output">{text}</div><div id="coordinates"></div>'
+    def render(self, request: Request, **kwargs) -> str:
+        text = request.state._state["env"].render_template(self._template.name)
+        return block(text)
+
 
 class CoordinatesRequest(TemplateBase, template=Path("coordinates_request.html")):
     pass
 
+
 class WhySoSlow(CorrectCode, template=Path("whysoslow.html")):
     pass
+
+
+class VideoPlayer(TemplateBase, template=Path("video_player.html")):
+    pass
+
+
+def unique_id_message(msg: str) -> str:
+    unique_id = int(time.time() * 1000)
+    return f'<p id="msg-{unique_id}">{msg}</p>'
+
+
+def block(msg: str) -> str:
+    return f"""
+        <div class="typewriter terminal-output">
+        {unique_id_message(msg)}
+        </div>
+    """

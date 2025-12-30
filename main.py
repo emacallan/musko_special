@@ -13,7 +13,7 @@ from datastar_py.fastapi import (
     ServerSentEventGenerator as SSE,
 )
 from fastapi import FastAPI, Request, Response
-from fastapi.responses import StreamingResponse
+from fastapi.responses import RedirectResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from minijinja import Environment
 from pydantic import BaseModel
@@ -24,7 +24,10 @@ from predator_cattle.templates import (
     CoordinatesRequest,
     CorrectCode,
     Home,
+    VideoPlayer,
+    block,
     template_loader,
+    unique_id_message,
 )
 
 from predator_cattle.templates import typewriter_words
@@ -33,7 +36,8 @@ from predator_cattle.templates import typewriter_words
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-VIDEO_PATH=Path("static/Missile_Homing_In_On_U_Boat.mp4")
+VIDEO_PATH = Path("static/Missile_Homing_In_On_U_Boat.mp4")
+
 
 class Broadcaster:
     """Pub/sub broadcaster - all subscribers receive all messages."""
@@ -96,16 +100,12 @@ app = FastAPI(lifespan=lifespan)
 static = Path.home() / ".local/js"
 
 app.mount("/static/", StaticFiles(directory=static))
+app.mount("/media/", StaticFiles(directory="static"))
 
 
 @app.get("/")
 async def home(request: Request):
     return HTMLResponse(Home().render(request))
-
-
-def unique_id_message(msg: str) -> str:
-    unique_id = int(time.time() * 1000)
-    return f'<p id="msg-{unique_id}">{msg}</p>'
 
 
 async def dia(messages: asyncio.Queue, shutdown_event: asyncio.Event, client_id: str):
@@ -142,6 +142,7 @@ async def launch_verify(request: Request, signals: ReadSignals):
                 SSE.patch_elements(
                     '<span id="status-indicator" class="status-indicator-active">',
                     selector="#status-indicator",
+                    mode=ElementPatchMode.REPLACE,
                 ),
                 SSE.patch_elements(
                     CorrectCode().render(request),
@@ -203,14 +204,14 @@ async def coordinates_verify(request: Request, signals: ReadSignals):
                 # ),
                 SSE.patch_signals(dict(coordinates="")),
                 SSE.patch_elements(
-                    '''
+                    """
                     <div
                         id="content"
                         class="content"
                         data-init="@get(\'/success\')" 
                         >
                         <div id="content-dialog"></div></div>
-                    ''',
+                    """,
                     selector="#content",
                     mode=ElementPatchMode.REPLACE,
                 ),
@@ -222,15 +223,9 @@ async def coordinates_verify(request: Request, signals: ReadSignals):
 
 @app.get("/success")
 async def success(request: Request):
-    def block(msg: str)->str: 
-        return f"""
-            <div class="typewriter terminal-output">
-            {unique_id_message(msg)}
-            </div>
-        """
     async def _():
         yield SSE.patch_elements(
-            block("Motar koordinater..."),
+            block("Mottar koordinater..."),
             selector="#content-dialog",
             mode=ElementPatchMode.APPEND,
         )
@@ -254,18 +249,50 @@ async def success(request: Request):
         )
 
         await asyncio.sleep(5)
-        yield SSE.redirect("/saved-the-day")
+        yield SSE.patch_elements(
+            VideoPlayer().render(request),
+            selector="#content-dialog",
+            mode=ElementPatchMode.BEFORE,
+        )
+        await asyncio.sleep(10)
 
     return DatastarResponse(_())
 
 
 @app.get("/saved-the-day")
+async def saved_the_day(request: Request):
+    return DatastarResponse(
+        SSE.patch_elements(
+            VideoPlayer().render(request),
+            selector="#content",
+            mode=ElementPatchMode.INNER,
+        )
+    )
+
+
+@app.get("/video/missile")
 async def send_video():
     def iterfile():
         with open(VIDEO_PATH, mode="rb") as file_like:
             yield from file_like
-        
+
     return StreamingResponse(iterfile(), media_type="video/mp4")
+
+
+@app.get("/after-video")
+async def after_video():
+    async def _():
+        for msg in (
+            "Hotet är undanröjt tack vare er.",
+            "Ert civilkurage har räddat Sverige.",
+        ):
+            yield SSE.patch_elements(
+                block(msg), selector="#content-dialog", mode=ElementPatchMode.INNER
+            )
+            await asyncio.sleep(3.5)
+
+    return DatastarResponse(_())
+
 
 class NewMessage(BaseModel):
     message: str
