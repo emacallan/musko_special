@@ -1,6 +1,8 @@
 import asyncio
 from contextlib import asynccontextmanager
 import logging
+import signal
+import sys
 from pathlib import Path
 import time
 
@@ -77,6 +79,21 @@ async def lifespan(app: FastAPI):
     broadcaster = Broadcaster()
     shutdown_event = asyncio.Event()
     active_tasks: set[asyncio.Task] = set()
+
+    # Force exit on second SIGINT/SIGTERM
+    force_exit_count = {"count": 0}
+
+    def force_exit_handler(signum, frame):
+        force_exit_count["count"] += 1
+        if force_exit_count["count"] >= 2:
+            logging.info("Force exit requested, terminating immediately")
+            sys.exit(1)
+        else:
+            logging.info("Shutting down... (press Ctrl+C again to force exit)")
+
+    signal.signal(signal.SIGINT, force_exit_handler)
+    signal.signal(signal.SIGTERM, force_exit_handler)
+
     logging.info("Broadcaster initialized")
     yield dict(
         env=env,
@@ -86,12 +103,12 @@ async def lifespan(app: FastAPI):
     )
     logging.info("Stopping")
     shutdown_event.set()
+    broadcaster.shutdown()
     # Cancel all active streaming tasks
     for task in active_tasks:
         task.cancel()
     if active_tasks:
         await asyncio.gather(*active_tasks, return_exceptions=True)
-    broadcaster.shutdown()
     logging.info("Shutdown complete")
 
 
